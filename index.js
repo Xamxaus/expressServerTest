@@ -1,13 +1,22 @@
-const express = require("express");
+'use strict';
 
-const port = 3000
+const express = require('express');
 const app = express();
+const server = app.listen(3000);
 
-app.get("/", (req, res) => {
-    console.log(`Server recieved get request: ${req.headers["test"]}`);
-    res.send({ "message": "Hello World!"});
-})
+app.use(express.static('public'));
 
-app.listen(port, () => {
-    console.log(`Server is listening on port: ${port}`);
-})
+console.log("My socket server is running");
+
+const socket = require('socket.io');
+const io = socket(server);
+
+io.sockets.on('connection', newConnection);
+
+function newConnection(socket) {
+    console.log(`new connection: ${socket.id} `);
+
+    socket.on('stream', msg => {
+        console.log(msg);
+    });
+}
