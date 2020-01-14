@@ -21,7 +21,7 @@ let pcConfig = {
 
 
 function setup() {
-  socket = io.connect('https://681c878d.ngrok.io');
+  socket = io.connect('https://rideshark-voice-chat-server.herokuapp.com/');
 
   socket.emit('create or join', room);
   console.log('Attempted to create or join room ', room);
