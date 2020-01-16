@@ -34,18 +34,19 @@ export class AppComponent {
       .subscribe( (message: string) => {
         this.messages.push(message);
       });
+
+    this.chatService.localStreamEvent.subscribe(event => {
+      this.localStream = event.localStream;
+      this.localV.srcObject = this.localStream;
+    });
+    this.chatService.remoteStreamEvent.subscribe(event => {
+      this.remoteStream = event.remoteStream;
+      this.remoteV.srcObject = this.remoteStream;
+    });
   }
 
   private getUserMedia() {
-    navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: true
-    }).then( (stream: MediaStream) => {
-        this.localStream = stream;
-        this.localV.srcObject = this.localStream;
-    }).catch(e => {
-        console.error(e);
-    })
+    this.chatService.getUserMedia();
   }
 
   public handleRemoteStream(event) {
