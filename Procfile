@@ -1,3 +1,1 @@
-web: cd clientSideCode/voice-chat-client/
-web: npm install
-web: ng serve
+web: sh -c 'cd clientSideCode/voice-chat-client/ && npm install && ng serve'
