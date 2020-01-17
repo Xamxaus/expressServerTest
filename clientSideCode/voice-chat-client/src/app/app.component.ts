@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ChatService } from './chat.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -35,11 +36,19 @@ export class AppComponent {
         this.messages.push(message);
       });
 
-    this.chatService.localStreamEvent.subscribe(event => {
+    this.chatService.localStreamEvent
+    .pipe(filter(v => {
+      return !!v
+    }))
+    .subscribe(event => {
       this.localStream = event.localStream;
       this.localV.srcObject = this.localStream;
     });
-    this.chatService.remoteStreamEvent.subscribe(event => {
+    this.chatService.remoteStreamEvent
+    .pipe(filter(v => {
+      return !!v
+    }))
+    .subscribe(event => {
       this.remoteStream = event.remoteStream;
       this.remoteV.srcObject = this.remoteStream;
     });
