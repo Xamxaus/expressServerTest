@@ -1,1 +1,1 @@
-web: sh -c 'cd clientSideCode/voice-chat-client/ && npm install angular-cli && npm install socket.io-client && ng serve'
+web: npm run start
