@@ -70,4 +70,8 @@ export class AppComponent {
   public handleRemoteStreamRemoved(event) {
     console.log('Remote stream removed. Event: ', event);
   }
+
+  public getNumber() {
+    this.chatService.sendMessage('get current people');
+  }
 }
