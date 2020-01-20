@@ -63,6 +63,10 @@ export class AppComponent {
     this.remoteVideo.srcObject = this.remoteStream;
   }
 
+  public hangUp() {
+    this.chatService.hangUp();
+  }
+
   public handleRemoteStreamRemoved(event) {
     console.log('Remote stream removed. Event: ', event);
   }
