@@ -20,6 +20,8 @@ export class AppComponent {
   localStream: any;
   remoteStream: any;
 
+  inTheRoom: boolean = false;
+
   constructor (private chatService: ChatService) {}
 
   public createOrJoin() {
@@ -52,15 +54,12 @@ export class AppComponent {
       this.remoteStream = event.remoteStream;
       this.remoteV.srcObject = this.remoteStream;
     });
+
+    this.chatService.inTheRoom.subscribe( v => this.inTheRoom = v);
   }
 
   private getUserMedia() {
     this.chatService.getUserMedia();
-  }
-
-  public handleRemoteStream(event) {
-    this.remoteStream = event.stream;
-    this.remoteVideo.srcObject = this.remoteStream;
   }
 
   public hangUp() {

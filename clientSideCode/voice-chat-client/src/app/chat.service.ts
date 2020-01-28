@@ -1,23 +1,23 @@
 import * as io from 'socket.io-client';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { parseCookieValue } from '@angular/common/src/cookie';
 
 @Injectable()
 export class ChatService {
     private serverUrl = "https://rideshark-voice-chat-server.herokuapp.com/";
+    // private serverUrl = "http://localhost:3000";
     private socket: any;
 
     private pc: any;
-    private pcConfig = {
-        'iceServers': [{
-            'urls': 'stun:stun.l.google.com:19302'
-        }]
-    };
+    // private pcConfig = {
+    //     'iceServers': [{
+    //         'urls': 'stun:stun.l.google.com:19302'
+    //     }]
+    // };
 
     room: string;
 
-    isLocal = true;
+    inTheRoom: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     isInitiator = false;
     isStarted = false;
@@ -31,17 +31,12 @@ export class ChatService {
 
     constructor() {
         this.socket = io(this.serverUrl);
-
-        // if (location.hostname !== 'localhost') {
-        //     this.requestTurn(
-        //       'https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913'
-        //     );
-        // }
     }
 
     public createOrJoin(room: string) {
         this.room = room;
         this.socket.emit('create or join', room);
+        this.inTheRoom.next(true);
     }
 
     public getMessages() : Observable<string> {
@@ -53,6 +48,7 @@ export class ChatService {
               
             this.socket.on('full', (room) => {
                 observer.next('Room ' + room + ' is full');
+                this.inTheRoom.next(false);
               });
 
             this.socket.on('join',  (room) =>{
@@ -65,6 +61,10 @@ export class ChatService {
                 observer.next('joined: ' + room);
                 this.isChannelReady = true;
               });
+            
+            this.socket.on('left', (room) => {
+                observer.next('left: ' + room);
+            })
 
             this.socket.on('message', (message) => {
                 console.log('CLient received message: ', message);
@@ -74,6 +74,7 @@ export class ChatService {
                     if(!this.isInitiator && !this.isStarted) {
                         this.maybeStart();
                     }
+                    console.log(this.pc.signalingState);
                     this.pc.setRemoteDescription(new RTCSessionDescription(message));
                     this.doAnswer();
                 } else if(message.type === 'answer' && this.isStarted) {
@@ -183,11 +184,11 @@ export class ChatService {
     }
 
     handleCreateOfferError(event) {
-        console.error('createOffer() error: ', event);
+        console.log('createOffer() error: ', event);
     }
 
     onCreateSessionDescriptionError(error) {
-        console.error('Failed to create session description: ' + error.toString());
+        console.log('Failed to create session description: ' + error.toString());
     }
     
     setLocalAndSendMessage = (sessionDescription) => {
@@ -199,15 +200,27 @@ export class ChatService {
     handleRemoteHangup() {
         console.log('Session terminated.');
         this.stop();
-        this.isInitiator = false;
+        this.stopLocal();
+        this.socket.emit('bye', this.room);
     }
 
     hangUp() {
         this.stop();
+        this.stopLocal();
         this.sendMessage('bye');
     }
 
+    stopLocal() {
+        let tracks = this.localStream.getTracks();
+        tracks.forEach(track => {
+            track.stop();
+        });
+        this.localStreamEvent.next(null);
+        console.log(this.pc);
+    }
+
     stop() {
+        this.inTheRoom.next(false);
         this.isStarted = false;
         this.pc.close();
         this.pc = null;
