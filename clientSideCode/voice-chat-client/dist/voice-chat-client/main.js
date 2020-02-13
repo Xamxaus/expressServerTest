@@ -320,7 +320,7 @@ var ChatService = /** @class */ (function () {
         var _this = this;
         navigator.mediaDevices.getUserMedia({
             audio: true,
-            video: true
+            video: false
         }).then(function (stream) {
             _this.localStream = stream;
             _this.localStreamEvent.next({
