@@ -94,8 +94,8 @@ var AppComponent = /** @class */ (function () {
             return !!v;
         }))
             .subscribe(function (event) {
-            _this.localStream = event.localStream;
-            _this.localV.srcObject = _this.localStream;
+            // this.localStream = event.localStream;
+            // this.localV.srcObject = this.localStream;
         });
         this.chatService.remoteStreamEvent
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["filter"])(function (v) {
