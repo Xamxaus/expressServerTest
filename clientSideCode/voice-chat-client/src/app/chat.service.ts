@@ -97,7 +97,7 @@ export class ChatService {
     }
 
     sendMessage(message) {
-        console.log("Client sending message: ", message);
+        // console.log("Client sending message: ", message);
         this.socket.emit('message', { "room": this.room, "message": message});
     }
 

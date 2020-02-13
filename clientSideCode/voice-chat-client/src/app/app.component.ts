@@ -51,8 +51,10 @@ export class AppComponent {
       return !!v
     }))
     .subscribe(event => {
+      console.log(event);
       this.remoteStream = event.remoteStream;
       this.remoteV.srcObject = this.remoteStream;
+      console.log(this.localV, this.remoteV);
     });
 
     this.chatService.inTheRoom.subscribe( v => this.inTheRoom = v);

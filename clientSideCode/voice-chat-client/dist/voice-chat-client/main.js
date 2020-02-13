@@ -102,8 +102,10 @@ var AppComponent = /** @class */ (function () {
             return !!v;
         }))
             .subscribe(function (event) {
+            console.log(event);
             _this.remoteStream = event.remoteStream;
             _this.remoteV.srcObject = _this.remoteStream;
+            console.log(_this.localV, _this.remoteV);
         });
         this.chatService.inTheRoom.subscribe(function (v) { return _this.inTheRoom = v; });
     };
@@ -313,7 +315,7 @@ var ChatService = /** @class */ (function () {
         });
     };
     ChatService.prototype.sendMessage = function (message) {
-        console.log("Client sending message: ", message);
+        // console.log("Client sending message: ", message);
         this.socket.emit('message', { "room": this.room, "message": message });
     };
     ChatService.prototype.getUserMedia = function () {
