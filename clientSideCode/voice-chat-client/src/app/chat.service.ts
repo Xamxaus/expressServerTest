@@ -85,8 +85,12 @@ export class ChatService {
                         candidate: message.candidate
                     });
                     this.pc.addIceCandidate(candidate);
-                } else if (message === 'bye' && this.isStarted) {
-                    this.handleRemoteHangup();
+                } else if (message === 'bye') {
+                    if(this.isStarted) {
+                        this.handleRemoteHangup();
+                    } else if (this.inTheRoom.value) {
+                        this.handleRemoteDecline();
+                    }
                 }
             });
         });
@@ -99,7 +103,7 @@ export class ChatService {
 
     getUserMedia() {
         navigator.mediaDevices.getUserMedia({
-            audio: false,
+            audio: true,
             video: true
         }).then( (stream: MediaStream) => {
             this.localStream = stream;
@@ -202,6 +206,14 @@ export class ChatService {
         this.stop();
         this.stopLocal();
         this.socket.emit('bye', this.room);
+    }
+
+    handleRemoteDecline() {
+        this.stopLocal();
+        this.sendMessage('bye');
+        this.inTheRoom.next(false);
+        this.isStarted = false;
+        this.pc = null;
     }
 
     hangUp() {

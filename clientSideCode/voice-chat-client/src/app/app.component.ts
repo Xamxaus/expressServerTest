@@ -66,11 +66,8 @@ export class AppComponent {
     this.chatService.hangUp();
   }
 
-  public handleRemoteStreamRemoved(event) {
-    console.log('Remote stream removed. Event: ', event);
-  }
-
   public getNumber() {
-    this.chatService.sendMessage('get current people');
+    this.chatService.room = 'test';
+    this.chatService.sendMessage('bye');
   }
 }
