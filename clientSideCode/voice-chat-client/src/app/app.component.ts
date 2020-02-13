@@ -43,8 +43,8 @@ export class AppComponent {
       return !!v
     }))
     .subscribe(event => {
-      // this.localStream = event.localStream;
-      // this.localV.srcObject = this.localStream;
+      this.localStream = event.localStream;
+      this.localV.srcObject = this.localStream;
     });
     this.chatService.remoteStreamEvent
     .pipe(filter(v => {

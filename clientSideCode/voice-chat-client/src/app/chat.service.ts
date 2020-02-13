@@ -104,7 +104,7 @@ export class ChatService {
     getUserMedia() {
         navigator.mediaDevices.getUserMedia({
             audio: true,
-            video: false
+            video: true
         }).then( (stream: MediaStream) => {
             this.localStream = stream;
             this.localStreamEvent.next({

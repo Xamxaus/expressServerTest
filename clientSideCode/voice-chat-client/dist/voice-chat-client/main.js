@@ -94,8 +94,8 @@ var AppComponent = /** @class */ (function () {
             return !!v;
         }))
             .subscribe(function (event) {
-            // this.localStream = event.localStream;
-            // this.localV.srcObject = this.localStream;
+            _this.localStream = event.localStream;
+            _this.localV.srcObject = _this.localStream;
         });
         this.chatService.remoteStreamEvent
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["filter"])(function (v) {
@@ -320,7 +320,7 @@ var ChatService = /** @class */ (function () {
         var _this = this;
         navigator.mediaDevices.getUserMedia({
             audio: true,
-            video: false
+            video: true
         }).then(function (stream) {
             _this.localStream = stream;
             _this.localStreamEvent.next({
